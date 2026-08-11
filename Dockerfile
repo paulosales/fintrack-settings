@@ -12,8 +12,8 @@ RUN apk add --no-cache \
 WORKDIR /usr/src/app
 
 COPY Cargo.toml Cargo.lock ./
-RUN mkdir src && echo 'fn main() {}' > src/main.rs
-RUN cargo build --release || true
+RUN mkdir -p src && echo 'fn main() {}' > src/main.rs
+RUN cargo build --release --locked || true
 
 COPY . .
 RUN cargo build --release --locked
@@ -28,8 +28,9 @@ RUN apk add --no-cache \
 WORKDIR /usr/local/bin
 
 COPY --from=builder /usr/src/app/target/release/settings-service ./settings-service
+COPY --from=builder /usr/src/app/migrations ./migrations
 
-RUN adduser -D app && chown app:app ./settings-service
+RUN adduser -D app && chown -R app:app ./settings-service ./migrations
 USER app
 
 EXPOSE 3004
