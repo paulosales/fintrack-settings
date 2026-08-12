@@ -33,10 +33,7 @@ struct JwksResponse {
 }
 
 async fn refresh_jwks(state: &AppState) -> anyhow::Result<()> {
-    let certs_url = format!(
-        "{}/protocol/openid-connect/certs",
-        state.keycloak_realm_url
-    );
+    let certs_url = format!("{}/protocol/openid-connect/certs", state.keycloak_realm_url);
     let jwks: JwksResponse = state
         .http_client
         .get(&certs_url)
