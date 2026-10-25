@@ -16,6 +16,7 @@ RUN mkdir -p src && echo 'fn main() {}' > src/main.rs
 RUN cargo build --release --locked || true
 
 COPY . .
+RUN touch src/main.rs && rm -f target/release/deps/settings_service* target/release/settings-service
 RUN cargo build --release --locked
 
 FROM alpine:3.18
